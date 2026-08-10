@@ -16,9 +16,9 @@ Make sure you have the Qt6 multimedia components installed in your system so the
   sudo pacman -S qt6-multimedia qt6-declarative
   ```
 
-* **Ubuntu/Debian (Qt6):**
+* **Ubuntu/Kubuntu/Debian (Qt6):**
   ```bash
-  sudo apt install qml6-module-qtmultimedia qml6-module-qtquick-effects
+  sudo apt install qml6-module-qtmultimedia qml6-module-qtquick-effects gstreamer1.0-libav gstreamer1.0-plugins-bad ubuntu-restricted-extras
   ```
 
 ## Automatic Installation
@@ -26,7 +26,7 @@ Make sure you have the Qt6 multimedia components installed in your system so the
 Clone the repository and run the installation script with root privileges:
 
 ```bash
-git clone [https://github.com/$USER/frieren-sddm-theme.git](https://github.com/YOUR_USERNAME/frieren-sddm-theme.git)
+git clone https://github.com/ItzBetalgeuse/frieren-animated-sddm.git
 cd frieren-sddm-theme
 chmod +x install.sh
 sudo ./install.sh
