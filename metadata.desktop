@@ -1,0 +1,10 @@
+[SddmGreeterTheme]
+Name=Frieren Animated
+Description=Un tema minimalista y animado de Sousou no Frieren para SDDM
+Author=itzbetalgeuse
+Copyright=(c) 2026
+License=GPL
+Type=sddm-theme
+Version=1.0
+MainScript=Main.qml
+ConfigFile=theme.conf
