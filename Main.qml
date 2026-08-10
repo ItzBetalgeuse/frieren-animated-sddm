@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Window // <-- NUEVO: Importación para leer los datos del monitor
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
@@ -6,8 +7,9 @@ import QtQuick.Effects
 
 Item {
     id: root
-    width: 1920
-    height: 1080
+    // Resolución completamente dinámica basada en la pantalla activa
+    width: Screen.width
+    height: Screen.height
 
     // 1. Carga de tu fuente OTF
     FontLoader {
@@ -112,9 +114,6 @@ Item {
         id: loginPanel
         width: 450
 
-        // Variable del usuario alojada aquí para evitar problemas de alcance
-        property string userNameStr: "itzbetalgeuse"
-
         anchors {
             left: parent.left
             top: parent.top
@@ -129,7 +128,7 @@ Item {
         // Disposición Principal (Logo + Contenedor)
         ColumnLayout {
             anchors.centerIn: parent
-            spacing: 25 // Espacio entre el logo y el contenedor gris
+            spacing: 25
             width: parent.width * 0.85
 
             // --- Logo de Frieren ---
@@ -141,21 +140,21 @@ Item {
                 fillMode: Image.PreserveAspectFit
             }
 
-            // --- NUEVO CONTENEDOR ENCAPSULADO (5% de visibilidad) ---
+            // --- CONTENEDOR ENCAPSULADO (5% de visibilidad) ---
             Rectangle {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 380
-                implicitHeight: formLayout.implicitHeight + 50 // 25px de padding superior e inferior
-                radius: 20 // Esquinas redondeadas
-                color: "#0D000000" // Negro al 5% (actúa como un gris extremadamente sutil)
-                border.width: 0 // Sin contorno
+                implicitHeight: formLayout.implicitHeight + 50
+                radius: 20
+                color: "#0D000000"
+                border.width: 0
 
                 // Disposición Interna (Formulario)
                 ColumnLayout {
                     id: formLayout
                     anchors.centerIn: parent
                     spacing: 18
-                    width: 320 // Ancho del contenido interno (deja 30px de margen simétrico a los lados)
+                    width: 320
 
                     // --- LÍNEA DECORATIVA SUPERIOR ---
                     Loader {
@@ -164,24 +163,36 @@ Item {
                         Layout.preferredHeight: 12
                     }
 
-                    // --- Nombre de Usuario ---
-                    Text {
-                        text: loginPanel.userNameStr.toUpperCase()
-                        font.family: frierenFont.name
-                        font.pixelSize: 26
-                        font.letterSpacing: 2
-                        color: "#ffffff"
-
+                    // --- Nombre de Usuario (Dinámico y Seleccionable) ---
+                    ComboBox {
+                        id: userSelector
                         Layout.alignment: Qt.AlignHCenter
-                        horizontalAlignment: Text.AlignHCenter
+                        Layout.preferredWidth: 280
 
-                        layer.enabled: true
-                        layer.effect: MultiEffect {
-                            shadowEnabled: true
-                            shadowColor: "#ffffff"
-                            shadowBlur: 0.6
-                            shadowHorizontalOffset: 0
-                            shadowVerticalOffset: 0
+                        model: userModel
+                        textRole: "name"
+                        currentIndex: userModel.lastIndex
+
+                        background: Item {}
+                        indicator: Item {}
+
+                        contentItem: Text {
+                            text: userSelector.currentText.toUpperCase()
+                            font.family: frierenFont.name
+                            font.pixelSize: 26
+                            font.letterSpacing: 2
+                            color: "#ffffff"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            layer.enabled: true
+                            layer.effect: MultiEffect {
+                                shadowEnabled: true
+                                shadowColor: "#ffffff"
+                                shadowBlur: 0.6
+                                shadowHorizontalOffset: 0
+                                shadowVerticalOffset: 0
+                            }
                         }
                     }
 
@@ -213,7 +224,7 @@ Item {
                             border.width: 1
                         }
 
-                        onAccepted: sddm.login(loginPanel.userNameStr, passwordField.text, sessionSelector.currentIndex)
+                        onAccepted: sddm.login(userSelector.currentText, passwordField.text, sessionSelector.currentIndex)
                     }
 
                     // --- LÍNEA DECORATIVA INFERIOR ---
@@ -249,7 +260,7 @@ Item {
                             border.width: 1
                         }
 
-                        onClicked: sddm.login(loginPanel.userNameStr, passwordField.text, sessionSelector.currentIndex)
+                        onClicked: sddm.login(userSelector.currentText, passwordField.text, sessionSelector.currentIndex)
                     }
                 }
             }
