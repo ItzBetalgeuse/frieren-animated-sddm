@@ -1,5 +1,7 @@
 # Frieren Animated SDDM Theme
 
+![Theme Preview](preview.jpg)
+
 An animated, minimalist, and elegant (glassmorphism style) SDDM login theme based on *Sousou no Frieren*, built with Qt6.
 
 ## Dependencies
@@ -27,7 +29,7 @@ Clone the repository and run the installation script with root privileges:
 
 ```bash
 git clone https://github.com/ItzBetalgeuse/frieren-animated-sddm.git
-cd frieren-sddm-theme
+cd frieren-animated-sddm
 chmod +x install.sh
 sudo ./install.sh
 ```

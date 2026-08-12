@@ -1,5 +1,5 @@
 import QtQuick
-import QtQuick.Window // <-- NUEVO: Importación para leer los datos del monitor
+import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Layouts
 import QtMultimedia
@@ -7,17 +7,16 @@ import QtQuick.Effects
 
 Item {
     id: root
-    // Resolución completamente dinámica basada en la pantalla activa
     width: Screen.width
     height: Screen.height
 
-    // 1. Carga de tu fuente OTF
+    // 1. OTF Custom font
     FontLoader {
         id: frierenFont
-        source: Qt.resolvedUrl("fonts/Frieren.otf") // <-- RECUERDA PONER TU ARCHIVO AQUÍ
+        source: Qt.resolvedUrl("fonts/Frieren.otf")
     }
 
-    // 2. Fondo dinámico en bucle
+    // 2. Dynamic bg
     MediaPlayer {
         id: bgVideo
         source: "assets/frieren-loop.webm"
@@ -32,7 +31,6 @@ Item {
         fillMode: VideoOutput.PreserveAspectCrop
     }
 
-    // --- COMPONENTE: Línea decorativa estilo Frieren (con rombo en el centro) ---
     Component {
         id: decorativeLineComponent
         Item {
@@ -73,7 +71,7 @@ Item {
         }
     }
 
-    // 3. Gestor de Sesiones (Esquina superior derecha)
+    // 3. Session selector
     ComboBox {
         id: sessionSelector
         anchors {
@@ -109,7 +107,7 @@ Item {
         }
     }
 
-    // 4. Panel de Login
+    // 4. Login
     Rectangle {
         id: loginPanel
         width: 450
@@ -125,13 +123,11 @@ Item {
 
         color: "transparent"
 
-        // Disposición Principal (Logo + Contenedor)
         ColumnLayout {
             anchors.centerIn: parent
             spacing: 25
             width: parent.width * 0.85
 
-            // --- Logo de Frieren ---
             Image {
                 source: "assets/frieren-logo.png"
                 Layout.alignment: Qt.AlignHCenter
@@ -140,7 +136,6 @@ Item {
                 fillMode: Image.PreserveAspectFit
             }
 
-            // --- CONTENEDOR ENCAPSULADO (5% de visibilidad) ---
             Rectangle {
                 Layout.alignment: Qt.AlignHCenter
                 Layout.preferredWidth: 380
@@ -149,21 +144,18 @@ Item {
                 color: "#0D000000"
                 border.width: 0
 
-                // Disposición Interna (Formulario)
                 ColumnLayout {
                     id: formLayout
                     anchors.centerIn: parent
                     spacing: 18
                     width: 320
 
-                    // --- LÍNEA DECORATIVA SUPERIOR ---
                     Loader {
                         sourceComponent: decorativeLineComponent
                         Layout.fillWidth: true
                         Layout.preferredHeight: 12
                     }
 
-                    // --- Nombre de Usuario (Dinámico y Seleccionable) ---
                     ComboBox {
                         id: userSelector
                         Layout.alignment: Qt.AlignHCenter
@@ -196,7 +188,6 @@ Item {
                         }
                     }
 
-                    // --- Campo de Contraseña ---
                     TextField {
                         id: passwordField
                         Layout.fillWidth: true
@@ -227,14 +218,12 @@ Item {
                         onAccepted: sddm.login(userSelector.currentText, passwordField.text, sessionSelector.currentIndex)
                     }
 
-                    // --- LÍNEA DECORATIVA INFERIOR ---
                     Loader {
                         sourceComponent: decorativeLineComponent
                         Layout.fillWidth: true
                         Layout.preferredHeight: 12
                     }
 
-                    // --- Botón de Login ---
                     Button {
                         id: loginBtn
                         Layout.fillWidth: false
@@ -264,6 +253,122 @@ Item {
                     }
                 }
             }
+        }
+    }
+
+    // 5. Power control
+    RowLayout {
+        anchors {
+            bottom: parent.bottom
+            right: parent.right
+            bottomMargin: 40
+            rightMargin: 50
+        }
+        spacing: 15
+
+        Button {
+            id: sleepBtn
+            Layout.preferredHeight: 60
+            Layout.preferredWidth: 60
+            hoverEnabled: true
+
+            contentItem: Item {
+                Image {
+                    anchors.centerIn: parent
+                    source: "assets/sleep.svg"
+                    sourceSize: Qt.size(64, 64)
+                    width: 32
+                    height: 32
+                    fillMode: Image.PreserveAspectFit
+                    opacity: sleepBtn.hovered ? 1.0 : 0.8
+
+                    layer.enabled: true
+                    layer.effect: MultiEffect {
+                        shadowEnabled: true
+                        shadowColor: "#ffffff"
+                        shadowBlur: 0.4
+                    }
+                }
+            }
+
+            background: Rectangle {
+                radius: 30
+                color: sleepBtn.down ? "#33000000" : (sleepBtn.hovered ? "#26000000" : "transparent")
+                border.color: sleepBtn.hovered ? "#4Dffffff" : "transparent"
+                border.width: 1
+            }
+
+            onClicked: sddm.suspend()
+        }
+
+        Button {
+            id: rebootBtn
+            Layout.preferredHeight: 60
+            Layout.preferredWidth: 60
+            hoverEnabled: true
+
+            contentItem: Item {
+                Image {
+                    anchors.centerIn: parent
+                    source: "assets/reboot.svg"
+                    sourceSize: Qt.size(64, 64)
+                    width: 32
+                    height: 32
+                    fillMode: Image.PreserveAspectFit
+                    opacity: rebootBtn.hovered ? 1.0 : 0.8
+
+                    layer.enabled: true
+                    layer.effect: MultiEffect {
+                        shadowEnabled: true
+                        shadowColor: "#ffffff"
+                        shadowBlur: 0.4
+                    }
+                }
+            }
+
+            background: Rectangle {
+                radius: 30
+                color: rebootBtn.down ? "#33000000" : (rebootBtn.hovered ? "#26000000" : "transparent")
+                border.color: rebootBtn.hovered ? "#4Dffffff" : "transparent"
+                border.width: 1
+            }
+
+            onClicked: sddm.reboot()
+        }
+
+        Button {
+            id: shutdownBtn
+            Layout.preferredHeight: 60
+            Layout.preferredWidth: 60
+            hoverEnabled: true
+
+            contentItem: Item {
+                Image {
+                    anchors.centerIn: parent
+                    source: "assets/power.svg"
+                    sourceSize: Qt.size(64, 64)
+                    width: 32
+                    height: 32
+                    fillMode: Image.PreserveAspectFit
+                    opacity: shutdownBtn.hovered ? 1.0 : 0.8
+
+                    layer.enabled: true
+                    layer.effect: MultiEffect {
+                        shadowEnabled: true
+                        shadowColor: "#ffffff"
+                        shadowBlur: 0.4
+                    }
+                }
+            }
+
+            background: Rectangle {
+                radius: 30
+                color: shutdownBtn.down ? "#33000000" : (shutdownBtn.hovered ? "#26000000" : "transparent")
+                border.color: shutdownBtn.hovered ? "#4Dffffff" : "transparent"
+                border.width: 1
+            }
+
+            onClicked: sddm.powerOff()
         }
     }
 }
