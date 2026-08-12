@@ -1,6 +1,6 @@
 # Frieren Animated SDDM Theme
 
-![Theme Preview](preview.jpg)
+<video src="preview.webm" controls="controls" muted="muted" width="100%"></video>
 
 An animated, minimalist, and elegant (glassmorphism style) SDDM login theme based on *Sousou no Frieren*, built with Qt6.
 
